@@ -1,0 +1,51 @@
+# ── Data (never commit raw or processed data) ────────────────────────────────
+data/
+*.parquet
+*.csv
+*.h5
+*.hdf5
+*.pkl
+*.pickle
+
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# ── Environments ─────────────────────────────────────────────────────────────
+.env
+.venv
+env/
+venv/
+ENV/
+
+# ── Jupyter ───────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# ── Model checkpoints & outputs ───────────────────────────────────────────────
+*.pt
+*.pth
+*.ckpt
+outputs/
+checkpoints/
+results/
+
+# ── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ── OS ───────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── IDEs ─────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.suo
+*.user
