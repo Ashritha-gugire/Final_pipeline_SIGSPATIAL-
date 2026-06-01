@@ -397,19 +397,50 @@ def stage_sequence_models(
     # ── LSTM-AD ───────────────────────────────────────────────────────────────
     try:
         from models.lstmad_scorer import LSTMADScorer
+        from sklearn.preprocessing import StandardScaler as SeqScaler
+
         log.info(f"[{dataset_label}] Building 7-dim sequence features...")
 
-        # Build on full future stays — split by normal/all after
-        seq_builder = SequenceFeatureBuilder(
+        # Build flat DataFrames for normal agents and all agents separately
+        normal_stays_df = future_stays[future_stays["agent"].isin(normal_agents)]
+
+        seq_normal = SequenceFeatureBuilder(
+            stays    = normal_stays_df,
+            is_yjmob = is_yjmob,
+            poi      = poi,
+        )
+        seq_all = SequenceFeatureBuilder(
             stays    = future_stays,
             is_yjmob = is_yjmob,
             poi      = poi,
         )
-        sequences = seq_builder.build_sequences()   # Dict[agent_id → np.ndarray (T, 7)]
 
-        normal_seqs = [sequences[a] for a in normal_agents if a in sequences]
-        all_seqs    = [sequences.get(a, np.zeros((1, 7), dtype=np.float32))
-                       for a in all_agents]
+        # Get flat DataFrames so we can fit scaler on normal stays only
+        from features.sequence_features import SEQ_FEATURE_COLS
+        flat_normal = seq_normal.build_flat()
+        flat_all    = seq_all.build_flat()
+
+        # StandardScaler fit on normal agent stays only — no leakage
+        scaler_seq = SeqScaler()
+        scaler_seq.fit(flat_normal[SEQ_FEATURE_COLS].fillna(0).values)
+
+        def _scale_sequences(flat_df: pd.DataFrame) -> dict:
+            """Scale flat stay df and return Dict[agent → np.ndarray (T, 7)]."""
+            flat_df = flat_df.copy()
+            flat_df[SEQ_FEATURE_COLS] = scaler_seq.transform(
+                flat_df[SEQ_FEATURE_COLS].fillna(0).values
+            )
+            seqs = {}
+            for agent_id, grp in flat_df.groupby("agent"):
+                seqs[int(agent_id)] = grp[SEQ_FEATURE_COLS].values.astype(np.float32)
+            return seqs
+
+        normal_seq_dict = _scale_sequences(flat_normal)
+        all_seq_dict    = _scale_sequences(flat_all)
+
+        normal_seqs = [normal_seq_dict[a] for a in normal_agents if a in normal_seq_dict]
+        all_seqs    = [all_seq_dict.get(int(a), np.zeros((1, len(SEQ_FEATURE_COLS)),
+                       dtype=np.float32)) for a in all_agents]
 
         log.info(f"[{dataset_label}] Fitting LSTM-AD "
                  f"({len(normal_seqs):,} normal seqs)...")
