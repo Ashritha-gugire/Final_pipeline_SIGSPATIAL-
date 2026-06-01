@@ -1,6 +1,6 @@
 # Unsupervised Anomaly Detection in Human Mobility Data
 ### A Multi-Model Benchmarking Framework
-**ACM SIGSPATIAL 2026** · Deloitte / IARPA HAYSTAC · GMU CARE Center
+**ACM SIGSPATIAL 2026** · Deloitte / IARPA · GMU CARE Center
 
 ---
 
@@ -20,8 +20,8 @@ This repository benchmarks **seven fully unsupervised anomaly detection models**
 | Model | Family | Backend |
 |---|---|---|
 | GMM | Density | scikit-learn |
-| Isolation Forest | Ensemble | scikit-learn |
-| KNN | Proximity | scikit-learn |
+| Isolation Forest | tree| scikit-learn |
+| KNN | distance Proximity | scikit-learn |
 | DAGMM | Deep generative | PyTorch |
 | USAD | Adversarial autoencoder | PyTorch |
 | LSTM-AD | Predictive sequence | PyTorch |
@@ -106,7 +106,9 @@ Final_Repository/
 ### NUMOSIM
 
 Place the following files in `data/numosim/raw/`:
-
+- [Paper (ACM DL)](https://doi.org/10.1145/3589132.3625590)
+- [Dataset download (OSF)](https://osf.io/sjyfr/)
+- [arXiv preprint](https://arxiv.org/abs/2409.03024)
 ```
 poi.parquet
 stay_points_train.parquet
@@ -118,6 +120,8 @@ demographics.parquet
 ### YJMob100K
 
 Place the following files in `data/yjmob/raw/`:
+- [Paper (Scientific Data)](https://doi.org/10.1038/s41597-024-03237-9)
+- [Dataset download (Zenodo)](https://zenodo.org/records/13237029)
 
 ```
 yjmob100k-dataset1.csv    ← 75,000 normal agents (business-as-usual)
@@ -360,27 +364,4 @@ on test labels.
 python tests/test_yjmob_preprocessing.py
 ```
 
----
 
-## Authors
-
-- **Ashritha Gugire** — George Mason University / Deloitte CARE Center
-  Senior Associate Data Scientist · Adjunct Instructor, CYSE 411
-  IARPA HAYSTAC · ACM SIGSPATIAL 2026
-
----
-
-## Citation
-
-If you use this code, please cite:
-
-```
-@inproceedings{gugire2026unsupervised,
-  title     = {Unsupervised Anomaly Detection in Human Mobility Data:
-               A Multi-Model Benchmarking Framework},
-  author    = {Gugire, Ashritha and ...},
-  booktitle = {Proceedings of the 34th ACM SIGSPATIAL International Conference
-               on Advances in Geographic Information Systems},
-  year      = {2026}
-}
-```
