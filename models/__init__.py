@@ -80,9 +80,9 @@ DEFAULT_HYPERPARAMS: dict = {
 }
 
 MODEL_FAMILY: dict = {
-    "GMM": "density", "Isolation Forest": "tree", "KNN": "distance proximity",
-    "DAGMM": "deep generative", "USAD": "deep adversarial",
-    "LSTM-AD": "sequence", "LM-TAD": "languagesequence",
+    "GMM": "density", "Isolation Forest": "tree", "KNN": "proximity",
+    "DAGMM": "deep ", "USAD": "deep ",
+    "LSTM-AD": "sequence", "LM-TAD": "sequence",
     "XGBoost†": " supervised",
 }
 

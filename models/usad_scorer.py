@@ -24,6 +24,7 @@ import pickle
 from pathlib import Path
 
 import numpy as np
+import torch
 
 from models.anomaly_scorer import AnomalyScorer
 
@@ -173,31 +174,35 @@ class USADScorer(AnomalyScorer):
         for n in range(1, self.epochs + 1):
             epoch_l1 = epoch_l2 = 0.0
             for (w,) in loader:
-                w   = w.to(self._device)
+                w = w.to(self._device)
+                # AE1 loss
                 z   = enc(w)
                 w1  = dec1(z)
-                w2  = dec2(z)
-                w12 = dec2(enc(w1))
-
-                w1_detached = w1.detach().clone()
-                w12 = dec2(enc(w1_detached))
+                w12 = dec2(enc(w1.detach()))
 
                 l1 = (1.0 / n)       * ((w - w1)  ** 2).mean() \
-                   + (1.0 - 1.0 / n) * ((w - w12) ** 2).mean()
-                l2 = (1.0 / n)       * ((w - w2)  ** 2).mean() \
-                   - (1.0 - 1.0 / n) * ((w - w12) ** 2).mean()
+                    + (1.0 - 1.0 / n) * ((w - w12) ** 2).mean()
 
-                opt1.zero_grad()
-                l1.backward(retain_graph=True)
-                opt1.step()
+            opt1.zero_grad()
+            l1.backward()
+            opt1.step()
 
-                opt2.zero_grad()
-                l2.backward()
-                opt2.step()
+    # AE2 loss — fresh forward pass, no shared graph with l1
+            with torch.no_grad():
+                z_  = enc(w)
+                w1_ = dec1(z_)
+            w2        = dec2(enc(w))
+            w12_fresh = dec2(enc(w1_.detach()))
 
-                epoch_l1 += l1.item()
-                epoch_l2 += l2.item()
+            l2 = (1.0 / n)       * ((w - w2)        ** 2).mean() \
+                - (1.0 - 1.0 / n) * ((w - w12_fresh) ** 2).mean()
 
+            opt2.zero_grad()
+            l2.backward()
+            opt2.step()
+
+            epoch_l1 += l1.item()
+            epoch_l2 += l2.item()
             if n % 10 == 0 or n == 1:
                 log.info(
                     f"  Epoch {n:>3}/{self.epochs}  "
