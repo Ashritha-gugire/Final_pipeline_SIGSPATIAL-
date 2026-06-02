@@ -183,26 +183,27 @@ class USADScorer(AnomalyScorer):
                 l1 = (1.0 / n)       * ((w - w1)  ** 2).mean() \
                     + (1.0 - 1.0 / n) * ((w - w12) ** 2).mean()
 
-            opt1.zero_grad()
-            l1.backward()
-            opt1.step()
+                opt1.zero_grad()
+                l1.backward()
+                opt1.step()
 
-    # AE2 loss — fresh forward pass, no shared graph with l1
-            with torch.no_grad():
-                z_  = enc(w)
-                w1_ = dec1(z_)
-            w2        = dec2(enc(w))
-            w12_fresh = dec2(enc(w1_.detach()))
+                # AE2 loss — fresh forward pass, no shared graph with l1
+                with torch.no_grad():
+                    z_  = enc(w)
+                    w1_ = dec1(z_)
+                w2        = dec2(enc(w))
+                w12_fresh = dec2(enc(w1_.detach()))
 
-            l2 = (1.0 / n)       * ((w - w2)        ** 2).mean() \
-                - (1.0 - 1.0 / n) * ((w - w12_fresh) ** 2).mean()
+                l2 = (1.0 / n)       * ((w - w2)        ** 2).mean() \
+                    - (1.0 - 1.0 / n) * ((w - w12_fresh) ** 2).mean()
 
-            opt2.zero_grad()
-            l2.backward()
-            opt2.step()
+                opt2.zero_grad()
+                l2.backward()
+                opt2.step()
 
-            epoch_l1 += l1.item()
-            epoch_l2 += l2.item()
+                epoch_l1 += l1.item()
+                epoch_l2 += l2.item()
+
             if n % 10 == 0 or n == 1:
                 log.info(
                     f"  Epoch {n:>3}/{self.epochs}  "
