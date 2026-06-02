@@ -10,7 +10,7 @@ Input assumption: the CSV is globally sorted by (uid, d, t).
 
 Constants
 ─────────
-    GRID_WIDTH   = 200   — YJMob uses a 200×200 grid of 500 m cells
+    GRID_WIDTH   = 200   — YJMob uses a 200x200 grid of 500 m cells
     SLOT_SECONDS = 1800  — each time slot is 30 minutes
     SLOTS_PER_DAY = 48
     SPLIT_DAY    = 60    — d < 60 is "past",  d >= 60 is "future"
