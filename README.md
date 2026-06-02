@@ -167,8 +167,8 @@ First run ~45 min (feature computation cached after). Subsequent runs ~5 min.
 ### Full NUMOSIM benchmark
 
 ```bash
-# First run — computes and caches everything
-python main.py --dataset numosim
+# First run — to compute all models  and caches everything
+python main.py --dataset numosim --sequence models 
 
 # Subsequent runs — skip preprocessing and features
 python main.py --dataset numosim --skip-preprocessing --skip-features
@@ -180,6 +180,10 @@ python main.py --dataset numosim --skip-preprocessing --skip-features
 python main.py --dataset numosim --skip-preprocessing --skip-features --sequence-models
 ```
 
+### To run NUMOSIM at all three rates (natural + 5% + 10%):
+```bash
+python main.py --dataset numosim --skip-preprocessing --skip-features --sequence-models --sensitivity
+```
 ### YJMob100K — sweeps 1%, 5%, 10% contamination
 
 ```bash
