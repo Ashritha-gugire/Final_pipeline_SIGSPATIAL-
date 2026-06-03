@@ -106,7 +106,7 @@ Final_Repository/
 ### NUMOSIM
 
 Place the following files in `data/numosim/raw/`:
-- [Paper (ACM DL)](https://doi.org/10.1145/3589132.3625590)
+- [Paper (ACM DL)](https://dl.acm.org/doi/10.1145/3681765.3698455)
 - [Dataset download (OSF)](https://osf.io/sjyfr/)
 - [arXiv preprint](https://arxiv.org/abs/2409.03024)
 ```
@@ -121,10 +121,10 @@ demographics.parquet
 
 Place the following files in `data/yjmob/raw/`:
 - [Paper (Scientific Data)](https://doi.org/10.1038/s41597-024-03237-9)
-- [Dataset download (Zenodo)](https://zenodo.org/records/13237029)
+- [Dataset download (Zenodo)](https://zenodo.org/records/10142719)
 
 ```
-yjmob100k-dataset1.csv    ← 75,000 normal agents (business-as-usual)
+yjmob100k-dataset1.csv    ← 100,000 normal agents (business-as-usual)
 yjmob100k-dataset2.csv    ← 25,000 anomalous agents (emergency period)
 ```
 

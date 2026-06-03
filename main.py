@@ -20,6 +20,7 @@ Pipeline stages
 Usage examples
 --------------
   python main.py --dataset numosim
+  python main.py --dataset numosim --skip-preprocessing --skip-features --sequence-models --sensitivity ( for full run at 1% 5% 10%)
   python main.py --dataset yjmob
   python main.py --dataset all
   python main.py --dataset numosim --skip-preprocessing
